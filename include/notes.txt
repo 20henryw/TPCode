@@ -1,0 +1,11 @@
+drivetrain::drivetrain(pros::Motor left, pros::Motor right) : lDrive(left), rDrive(right) 
+{
+}
+
+above works but not below
+
+drivetrain::drivetrain(pros::Motor left, pros::Motor right)
+{
+    lDrive = left;
+    rDrive = right;
+}
