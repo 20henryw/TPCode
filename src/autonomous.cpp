@@ -7,7 +7,6 @@ pros::Motor leftBacka(3, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightFronta(2, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightBacka(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 
-
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

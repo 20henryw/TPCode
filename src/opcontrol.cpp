@@ -1,7 +1,7 @@
 #include "main.h"
 #include "math.h"
 
-pros::Motor leftFront(5, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftFront(11, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor leftBack(3, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
@@ -16,21 +16,27 @@ bool isFlying = false;
 bool isDown = false;
 
 int driveCurve(int init) {
-  double curve = init/127.0;
-  int power = (int) pow(curve,2)*127;
+  int dir = init/abs(init);
+  return ((int) ((pow(init/127.0,2)) * 127 * dir));
+  
 }
 
 void drive(void *param){   
     pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(true){
-          int left = driveCurve(master.get_analog(ANALOG_LEFT_Y));
-          int right = driveCurve(master.get_analog(ANALOG_RIGHT_Y));
-          leftFront = left;
-          leftBack = left;
-          rightFront = -right;
-          rightBack = -right;
-      
-    
+//          int left = driveCurve(master.get_analog(ANALOG_LEFT_Y));
+//          int right = driveCurve(master.get_analog(ANALOG_RIGHT_Y));
+      float exponent = 2;
+      int left = master.get_analog(ANALOG_LEFT_Y);
+      int leftDir = left/abs(left);
+      int right = master.get_analog(ANALOG_RIGHT_Y);
+      int rightDir = right/abs(right);
+
+      leftFront = driveCurve(left);
+      leftBack = driveCurve(left);
+      rightFront = -driveCurve(right);
+      rightBack = -driveCurve(right);
+
         /**
         //arcade turns assigned to right joystick (left / right)	
         if(master.get_analog(ANALOG_RIGHT_X) < 0){
@@ -79,6 +85,7 @@ void flywheelTask(void *param){
         intake.move(0);
       }
       */
+      pros::lcd::set_text(5, std::to_string(-flywheel.get_actual_velocity()));
       pros::Task::delay(10);
     }
   }
