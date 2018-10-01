@@ -28,14 +28,35 @@ void autonomous() {
 	{4_in, 15.5_in}
     );
 
-    drive_controller.setMaxVelocity(130);
-    drive_controller.resetSensors();
-
-    drive_controller.moveDistance(10_in);
-    drive_controller.waitUntilSettled();
-
     flywheel1.move(127);
     flywheel2.move(127);
+
+    pros::Task::delay(3500);
+
+    intake.move(127);
+    pros::Task::delay(1500);
+    flywheel1.move(0);
+    flywheel2.move(0);
+    drive_controller.turnAngleAsync(55_deg);
+    drive_controller.waitUntilSettled();
+    pros::Task::delay(150);
+    drive_controller.moveDistanceAsync(43_in);
+    drive_controller.waitUntilSettled();
+    intake.move(0);
+    drive_controller.moveDistance(-5_in);
+    drive_controller.waitUntilSettled();   
+    drive_controller.turnAngle(-90_deg);
+    pros::Task::delay(150);
+    drive_controller.waitUntilSettled();
+    leftF.move(127);
+    leftB.move(127);
+    rightF.move(117);
+    rightB.move(117);
+    pros::Task::delay(950);
+    leftF.move(0);
+    leftB.move(0);
+    rightF.move(0);
+    rightB.move(0);
 
 }
 /**
