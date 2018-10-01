@@ -42,8 +42,13 @@ void drive(void *param){
 
       leftF.move(left);
       leftB.move(left);
-      rightF.move(-right);
-      rightB.move(-right);
+      rightF.move(right);
+      rightB.move(right);
+      
+      pros::lcd::set_text(3, std::to_string(leftF.get_temperature()));
+      pros::lcd::set_text(4, std::to_string(leftB.get_temperature()));
+      pros::lcd::set_text(5, std::to_string(rightF.get_temperature()));
+      pros::lcd::set_text(6, std::to_string(rightB.get_temperature()));
 
       // leftFront = driveCurve(left);
       // leftBack = driveCurve(left);
@@ -100,8 +105,8 @@ void flywheelTask(void *param){
         intake.move(0);
       }
       */
-      pros::lcd::set_text(5, std::to_string(-flywheel1.get_actual_velocity()));
-      pros::lcd::set_text(6, std::to_string(-flywheel2.get_actual_velocity()));
+      pros::lcd::set_text(1, std::to_string(-flywheel1.get_actual_velocity()));
+      pros::lcd::set_text(2, std::to_string(-flywheel2.get_actual_velocity()));
       pros::Task::delay(10);
     }
   }
