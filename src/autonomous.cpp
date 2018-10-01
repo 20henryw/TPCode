@@ -45,7 +45,7 @@ void autonomous() {
     intake.move(0);
     drive_controller.moveDistance(-5_in);
     drive_controller.waitUntilSettled();   
-    drive_controller.turnAngle(-90_deg);
+    drive_controller.turnAngle(-88_deg);
     pros::Task::delay(150);
     drive_controller.waitUntilSettled();
     leftF.move(127);
