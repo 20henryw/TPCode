@@ -1,11 +1,13 @@
 #include "main.h"
 #include "math.h"
 
+using namespace okapi;
 pros::Motor leftFront(11, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor leftBack(3, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor flywheel(1, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor flywheel2(12, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flipper(7, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
@@ -14,6 +16,7 @@ bool isIntaking = false;
 bool isOuttaking = false;
 bool isFlying = false;
 bool isDown = false;
+int flyPow = 127;
 
 int driveCurve(int init) {
   int dir = init/abs(init);
@@ -22,20 +25,30 @@ int driveCurve(int init) {
 }
 
 void drive(void *param){   
+    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    
     pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(true){
 //          int left = driveCurve(master.get_analog(ANALOG_LEFT_Y));
 //          int right = driveCurve(master.get_analog(ANALOG_RIGHT_Y));
       float exponent = 2;
       int left = master.get_analog(ANALOG_LEFT_Y);
-      int leftDir = left/abs(left);
+      //int leftDir = left/abs(left);
       int right = master.get_analog(ANALOG_RIGHT_Y);
-      int rightDir = right/abs(right);
+      //int rightDir = right/abs(right);
 
-      leftFront = driveCurve(left);
-      leftBack = driveCurve(left);
-      rightFront = -driveCurve(right);
-      rightBack = -driveCurve(right);
+      leftF.move(left);
+      leftB.move(left);
+      rightF.move(-right);
+      rightB.move(-right);
+
+      // leftFront = driveCurve(left);
+      // leftBack = driveCurve(left);
+      // rightFront = -driveCurve(right);
+      // rightBack = -driveCurve(right);
 
         /**
         //arcade turns assigned to right joystick (left / right)	
@@ -66,10 +79,12 @@ void flywheelTask(void *param){
       pros::Task::delay(10);
     }
     while(isFlying){
-      flywheel.move(-127);
+      flywheel1.move(flyPow);
+      flywheel2.move(flyPow);
       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1){
         isFlying = !isFlying;
-        flywheel.move(0);
+        flywheel1.move(0);
+        flywheel2.move(0);
         pros::Task::delay(200);
       }
       /**
@@ -85,7 +100,8 @@ void flywheelTask(void *param){
         intake.move(0);
       }
       */
-      pros::lcd::set_text(5, std::to_string(-flywheel.get_actual_velocity()));
+      pros::lcd::set_text(5, std::to_string(-flywheel1.get_actual_velocity()));
+      pros::lcd::set_text(6, std::to_string(-flywheel2.get_actual_velocity()));
       pros::Task::delay(10);
     }
   }

@@ -1,11 +1,5 @@
 #include "main.h"
-
-pros::Motor flywheela(1, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intakea(6, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftFronta(5, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftBacka(3, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightFronta(2, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightBacka(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+using namespace okapi;
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -18,6 +12,33 @@ pros::Motor rightBacka(4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+void autonomous() {
+
+    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel1(1, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+
+    ChassisControllerIntegrated drive_controller = ChassisControllerFactory::create(
+    leftF, rightF, rightB, leftB,
+	AbstractMotor::gearset::green,
+	{4_in, 15.5_in}
+    );
+
+    drive_controller.setMaxVelocity(130);
+    drive_controller.resetSensors();
+
+    drive_controller.moveDistance(10_in);
+    drive_controller.waitUntilSettled();
+
+    flywheel1.move(127);
+    flywheel2.move(127);
+
+}
+/**
 void autonomous2() {
     flywheela.move(-127);
     pros::Task::delay(11000);
@@ -62,3 +83,4 @@ void autonomous() {
 
 
 }
+*/

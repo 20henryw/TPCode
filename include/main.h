@@ -39,14 +39,15 @@
  *            The okapi namespace will export all symbols inside the pros
  * namespace.
  */
-// using namespace pros;
-// using namespace okapi;
+//using namespace pros;
+//using namespace okapi;
 
 /**
  * You should add more #includes here
  */
-//#include "okapi/api.hpp"
+#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
+using namespace okapi::literals;
 
 #ifdef __cplusplus
 /**
