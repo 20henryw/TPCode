@@ -110,12 +110,177 @@ void auton1() {
     rightF.move(-5);
     rightB.move(-5);
 }
+/**
+ * Red front. Shoots all 3 flags
+ ***/
+void auton2() {
+    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel1(1, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+
+    ChassisControllerIntegrated drive_controller = ChassisControllerFactory::create(
+    leftF, rightF, rightB, leftB,
+	AbstractMotor::gearset::green,
+	{4_in, 15.5_in}
+    );
+
+    
+    //intake first ball and back up, lower ball from flywheel
+    intake.move(127);
+    drive_controller.moveDistanceAsync(45_in);
+    drive_controller.waitUntilSettled();
+    intake.move(-127);
+    pros::Task::delay(100);
+    intake.move(0);
+
+    //turn flywheel on
+    flywheel1.move(127);
+    flywheel2.move(127);
+
+    //back up, align with wall
+    leftF.move(-80);
+    leftB.move(-80);
+    rightF.move(-80);
+    rightB.move(-80);
+    pros::Task::delay(2000);
+    leftF.move(0);
+    leftB.move(0);
+    rightF.move(0);
+    rightB.move(0);
+
+    //move forward, turn left, back up
+    drive_controller.moveDistanceAsync(6.5_in);
+    drive_controller.waitUntilSettled();
+    drive_controller.turnAngleAsync(-75_deg);
+    drive_controller.waitUntilSettled();
+    pros::Task::delay(150);
+    drive_controller.moveDistanceAsync(-8_in);
+    drive_controller.waitUntilSettled();
+    
+    //shoot high flag, shoot middle, drive into low
+    intake.move(127);
+    pros::Task::delay(300);
+    intake.move(0);
+    drive_controller.moveDistanceAsync(35_in);
+    drive_controller.waitUntilSettled();
+    intake.move(127);
+    pros::Task::delay(1000);
+    intake.move(0);
+    flywheel1.move(0);
+    flywheel2.move(0);
+    leftF.move(60);
+    leftB.move(60);
+    rightF.move(90);
+    rightB.move(90);
+    pros::Task::delay(750);
+    leftF.move(0);
+    leftB.move(0);
+    rightF.move(0);
+    rightB.move(0);
+
+    //back up, turn left, flip cap
+    drive_controller.moveDistanceAsync(-20_in);
+    drive_controller.waitUntilSettled();
+    drive_controller.turnAngleAsync(90_deg);
+
+}
+
+/**
+ * Blue front. Shoots all 3 flags
+ ***/
+void auton3() {
+    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel1(1, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+
+    ChassisControllerIntegrated drive_controller = ChassisControllerFactory::create(
+    leftF, rightF, rightB, leftB,
+	AbstractMotor::gearset::green,
+	{4_in, 15.5_in}
+    );
+
+    
+    //intake first ball and back up, lower ball from flywheel
+    intake.move(127);
+    drive_controller.moveDistanceAsync(45_in);
+    drive_controller.waitUntilSettled();
+    intake.move(-127);
+    pros::Task::delay(100);
+    intake.move(0);
+
+    //turn flywheel on
+    flywheel1.move(127);
+    flywheel2.move(127);
+
+    //back up, align with wall
+    leftF.move(-80);
+    leftB.move(-80);
+    rightF.move(-80);
+    rightB.move(-80);
+    pros::Task::delay(2000);
+    leftF.move(0);
+    leftB.move(0);
+    rightF.move(0);
+    rightB.move(0);
+
+    //move forward, turn left, back up
+    drive_controller.moveDistanceAsync(6.5_in);
+    drive_controller.waitUntilSettled();
+    drive_controller.turnAngleAsync(75_deg);
+    drive_controller.waitUntilSettled();
+    pros::Task::delay(150);
+    drive_controller.moveDistanceAsync(-8_in);
+    drive_controller.waitUntilSettled();
+    
+    //shoot high flag, shoot middle, drive into low
+    intake.move(127);
+    pros::Task::delay(300);
+    intake.move(0);
+    drive_controller.moveDistanceAsync(35_in);
+    drive_controller.waitUntilSettled();
+    intake.move(127);
+    pros::Task::delay(1000);
+    intake.move(0);
+    flywheel1.move(0);
+    flywheel2.move(0);
+    leftF.move(90);
+    leftB.move(90);
+    rightF.move(60);
+    rightB.move(60);
+    pros::Task::delay(750);
+    leftF.move(0);
+    leftB.move(0);
+    rightF.move(0);
+    rightB.move(0);
+
+    //back up, turn left, flip cap
+    drive_controller.moveDistanceAsync(-20_in);
+    drive_controller.waitUntilSettled();
+    drive_controller.turnAngleAsync(90_deg);
+
+}
 
 void autonomous() {
-    switch (1) {
+    switch (2) {
+        //red back
         case 0: auton0();
         break;
+        //blue back
         case 1: auton1();
+        break;
+        //red front
+        case 2: auton2();
+        break;
+        //blue front
+        case 3: auton3();
         break;
     }
 }
