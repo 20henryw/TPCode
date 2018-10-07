@@ -55,11 +55,11 @@ void auton0() {
     leftB.move(127);
     rightF.move(117);
     rightB.move(117);
-    pros::Task::delay(975);
-    leftF.move(-.1);
-    leftB.move(-.1);
-    rightF.move(-.1);
-    rightB.move(-.1);
+    pros::Task::delay(990);
+    leftF.move(-5);
+    leftB.move(-5);
+    rightF.move(-5);
+    rightB.move(-5);
 }
 
 /**
@@ -269,7 +269,7 @@ void auton3() {
 }
 
 void autonomous() {
-    switch (2) {
+    switch (1) {
         //red back
         case 0: auton0();
         break;
