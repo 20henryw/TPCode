@@ -55,7 +55,7 @@ void auton0() {
     leftB.move(127);
     rightF.move(117);
     rightB.move(117);
-    pros::Task::delay(990);
+    pros::Task::delay(1250);
     leftF.move(-5);
     leftB.move(-5);
     rightF.move(-5);
@@ -104,7 +104,7 @@ void auton1() {
     leftB.move(117);
     rightF.move(127);
     rightB.move(127);
-    pros::Task::delay(975);
+    pros::Task::delay(1250);
     leftF.move(-5);
     leftB.move(-5);
     rightF.move(-5);
@@ -269,7 +269,7 @@ void auton3() {
 }
 
 void autonomous() {
-    switch (1) {
+    switch (0) {
         //red back
         case 0: auton0();
         break;
