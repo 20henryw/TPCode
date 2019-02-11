@@ -1,6 +1,8 @@
 #include "main.h"
 using namespace okapi;
 
+Drive* drA = new Drive();
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -22,6 +24,11 @@ pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_
 pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
 */
 
+/**
+ * 
+ * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
+ * drA->functionName();
+ **/
 void autonomous() {
 
 }

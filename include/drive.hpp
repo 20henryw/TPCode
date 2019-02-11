@@ -16,7 +16,7 @@ class Drive {
         void moveAll(int power);
         void pidMoveLeft(double position, std::int32_t velocity);
         void pidMoveRight(double position, std::int32_t velocity);
-        void pidMove(double position, std::int32_t velocity);
+        void pidMoveAll(double position, std::int32_t velocity);
         void pidTurn(double position, std::int32_t velocity);
 
 

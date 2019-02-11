@@ -14,7 +14,7 @@ bool isDown = false;
 int flyPow = 127;
 
 
-Drive* dr = new Drive();
+Drive* drOp = new Drive();
 
 int driveCurve(int init) {
   int dir = init/abs(init);
@@ -41,8 +41,8 @@ void drive(void *param){
       int right = master.get_analog(ANALOG_RIGHT_Y);
       //int rightDir = right/abs(right);
      
-     dr->moveLeft(left);
-     dr->moveRight(right);
+     drOp->moveLeft(left);
+     drOp->moveRight(right);
 
       /*
       leftF.move(left);

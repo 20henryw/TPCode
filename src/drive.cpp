@@ -62,7 +62,7 @@ void Drive::pidMoveRight(double position, std::int32_t velocity) {
     
 }
 
-void Drive::pidMove(double position, std::int32_t velocity) {
+void Drive::pidMoveAll(double position, std::int32_t velocity) {
     pidMoveLeft(position, velocity);
     pidMoveRight(position, velocity);
 }
