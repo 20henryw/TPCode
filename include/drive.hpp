@@ -3,14 +3,23 @@
 
 #include "main.h"
 
-class Drivetrain {
+class Drive {
     private:
-        pros::Motor lDrive;
-        pros::Motor rDrive;
+        pros::Motor lFDrive;
+        pros::Motor lBDrive;
+        pros::Motor rFDrive;
+        pros::Motor rBDrive;
     public:
-        Drivetrain(pros::Motor l, pros::Motor r);
-        ~Drivetrain() {}
-        void move(pros::Controller master);
+        Drive();
+        void moveLeft(int power);
+        void moveRight(int power);
+        void moveAll(int power);
+        void pidMoveLeft(double position, std::int32_t velocity);
+        void pidMoveRight(double position, std::int32_t velocity);
+        void pidMove(double position, std::int32_t velocity);
+        void pidTurn(double position, std::int32_t velocity);
+
+
 };
 
 #endif

@@ -6,7 +6,7 @@ pros::Motor leftFront(11, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor leftBack(3, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flywheel2(12, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flipper(7, pros::E_MOTOR_ENCODER_DEGREES);
@@ -16,7 +16,10 @@ bool isIntaking = false;
 bool isOuttaking = false;
 bool isFlying = false;
 bool isDown = false;
-int flyPow = 127;
+int flyPow = 94;
+
+
+Drive* d = new Drive();
 
 int driveCurve(int init) {
   int dir = init/abs(init);
@@ -25,11 +28,13 @@ int driveCurve(int init) {
 }
 
 void drive(void *param){   
+    /** using top of file defs instead of these
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    
+    */
+
     pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(true){
 //          int left = driveCurve(master.get_analog(ANALOG_LEFT_Y));
@@ -39,16 +44,25 @@ void drive(void *param){
       //int leftDir = left/abs(left);
       int right = master.get_analog(ANALOG_RIGHT_Y);
       //int rightDir = right/abs(right);
-
+      
+      /** old motors, now using the top of file defs instead of beginning of function
       leftF.move(left);
       leftB.move(left);
       rightF.move(right);
       rightB.move(right);
-      
-      pros::lcd::set_text(3, std::to_string(leftF.get_temperature()));
-      pros::lcd::set_text(4, std::to_string(leftB.get_temperature()));
-      pros::lcd::set_text(5, std::to_string(rightF.get_temperature()));
-      pros::lcd::set_text(6, std::to_string(rightB.get_temperature()));
+      */
+
+      /*
+      leftFront.move(left);
+      leftBack.move(left);
+      rightFront.move(right);
+      rightBack.move(right);
+
+      pros::lcd::set_text(3, std::to_string(leftFront.get_temperature()));
+      pros::lcd::set_text(4, std::to_string(leftBack.get_temperature()));
+      pros::lcd::set_text(5, std::to_string(rightFront.get_temperature()));
+      pros::lcd::set_text(6, std::to_string(rightBack.get_temperature()));
+      */
 
       // leftFront = driveCurve(left);
       // leftBack = driveCurve(left);
@@ -85,11 +99,9 @@ void flywheelTask(void *param){
     }
     while(isFlying){
       flywheel1.move(flyPow);
-      flywheel2.move(flyPow);
       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1){
         isFlying = !isFlying;
         flywheel1.move(0);
-        flywheel2.move(0);
         pros::Task::delay(200);
       }
       /**
@@ -106,7 +118,6 @@ void flywheelTask(void *param){
       }
       */
       pros::lcd::set_text(1, std::to_string(-flywheel1.get_actual_velocity()));
-      pros::lcd::set_text(2, std::to_string(-flywheel2.get_actual_velocity()));
       pros::Task::delay(10);
     }
   }
@@ -143,6 +154,7 @@ void intakeTask(void* param){
   }
 }       
 
+/*
 void flipperTask(void* param){
   while (true){
   pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -169,7 +181,7 @@ void flipperTask(void* param){
     pros::Task::delay(10);    
   }
 }       
-
+*/
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -190,5 +202,5 @@ void opcontrol() {
 	pros::Task startFly(flywheelTask);
 	pros::Task startDrive(drive);
 	pros::Task startIntake(intakeTask);
-  pros::Task startFlipper(flipperTask);
+  //pros::Task startFlipper(flipperTask);
 }

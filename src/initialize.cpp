@@ -10,6 +10,26 @@ void on_center_button() {
 	}
 }
 
+void on_left_button() {
+	static bool pressed = false;
+	pressed = !pressed;
+	if (pressed) {
+		//autonNum = 0; figure out how to also use autonNum in autonomous.cpp
+	} else {
+		pros::lcd::set_text(2, "Red Selected");
+	}
+}
+
+void on_right_button() {
+	static bool pressed = false;
+	pressed = !pressed;
+	if (pressed) {
+		//autonNum = 1; figure out how to also use autonNum in autonomous.cpp
+	} else {
+		pros::lcd::set_text(2, "Blue Selected");
+	}
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -18,7 +38,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello Andrew!");
+	pros::lcd::set_text(0, "Reset!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -39,4 +59,8 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	pros::lcd::register_btn0_cb(on_left_button);
+	pros::lcd::register_btn2_cb(on_right_button);
+
+}

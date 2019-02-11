@@ -13,15 +13,29 @@ using namespace okapi;
  * from where it left off.
  */
 
+/*
+pros::Motor leftFront(11, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftBack(3, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
+*/
+
+void autonomous() {
+
+}
+
 /**
  * Red back. Shoots High middle, then turns and gets ball under cap, then parks.
  ***/
+/*
 void auton0() {
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor flywheel1(1, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+    Motor flywheel1(1, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
@@ -31,8 +45,8 @@ void auton0() {
 	{4_in, 15.5_in}
     );
 
-    flywheel1.move(127);
-    flywheel2.move(127);
+    flywheel1.move(94);
+    flywheel2.move(94);
 
     pros::Task::delay(5000);
 
@@ -61,10 +75,11 @@ void auton0() {
     rightF.move(-5);
     rightB.move(-5);
 }
-
+*/
 /**
  * Blue back. Shoots High middle, then turns and gets ball under cap, then parks.
  ***/
+/*
 void auton1() {
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
@@ -80,8 +95,8 @@ void auton1() {
 	{4_in, 15.5_in}
     );
 
-    flywheel1.move(127);
-    flywheel2.move(127);
+    flywheel1.move(94);
+    flywheel2.move(94);
 
     pros::Task::delay(5000);
 
@@ -110,9 +125,12 @@ void auton1() {
     rightF.move(-5);
     rightB.move(-5);
 }
+*/
+
 /**
  * Red front. Shoots all 3 flags
  ***/
+/*
 void auton2() {
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
@@ -138,8 +156,8 @@ void auton2() {
     intake.move(0);
 
     //turn flywheel on
-    flywheel1.move(127);
-    flywheel2.move(127);
+    flywheel1.move(94);
+    flywheel2.move(94);
 
     //back up, align with wall
     leftF.move(-80);
@@ -188,10 +206,12 @@ void auton2() {
     drive_controller.turnAngleAsync(90_deg);
 
 }
+*/
 
 /**
  * Blue front. Shoots all 3 flags
  ***/
+/*
 void auton3() {
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
@@ -217,8 +237,8 @@ void auton3() {
     intake.move(0);
 
     //turn flywheel on
-    flywheel1.move(127);
-    flywheel2.move(127);
+    flywheel1.move(94);
+    flywheel2.move(94);
 
     //back up, align with wall
     leftF.move(-80);
@@ -267,7 +287,9 @@ void auton3() {
     drive_controller.turnAngleAsync(90_deg);
 
 }
+*/
 
+/*
 void autonomous() {
     switch (0) {
         //red back
@@ -284,7 +306,7 @@ void autonomous() {
         break;
     }
 }
-
+*/
 /**
 void autonomous2() {
     flywheela.move(-127);

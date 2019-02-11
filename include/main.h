@@ -6,6 +6,8 @@
 #ifndef _PROS_MAIN_H_
 #define _PROS_MAIN_H_
 
+extern int autonNum;
+
 /**
  * If defined, some commonly used enums will have preprocessor macros which give
  * a shorter,
