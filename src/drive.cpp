@@ -7,10 +7,10 @@
 #define KI 0.001f
 #define KD 0.1f
 
-const int LF_PORT = 11;
-const int LB_PORT = 3;
-const int RF_PORT = 2;
-const int RB_PORT = 4;
+const int LF_PORT = 8;
+const int LB_PORT = 19;
+const int RF_PORT = 10;
+const int RB_PORT = 20;
 
 const pros::motor_gearset_e_t LF_GEAR = pros::E_MOTOR_GEARSET_18;
 const pros::motor_gearset_e_t LB_GEAR = pros::E_MOTOR_GEARSET_18;
@@ -19,8 +19,8 @@ const pros::motor_gearset_e_t RB_GEAR = pros::E_MOTOR_GEARSET_18;
 
 const bool LF_REVERSE = false;
 const bool LB_REVERSE = false;
-const bool RF_REVERSE = false;
-const bool RB_REVERSE = false;
+const bool RF_REVERSE = true;
+const bool RB_REVERSE = true;
 
 
 

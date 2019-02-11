@@ -2,24 +2,19 @@
 #include "math.h"
 
 using namespace okapi;
-pros::Motor leftFront(11, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftBack(3, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightFront(2, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightBack(4, pros::E_MOTOR_GEARSET_18, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor flywheel1(6, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flywheel2(12, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intake(17, pros::E_MOTOR_GEARSET_06, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor flipper(7, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Controller partner(pros::E_CONTROLLER_PARTNER);
 
-bool isIntaking = false;
-bool isOuttaking = false;
+bool isShooting = false;
 bool isFlying = false;
 bool isDown = false;
-int flyPow = 94;
+int flyPow = 127;
 
 
-Drive* d = new Drive();
+Drive* dr = new Drive();
 
 int driveCurve(int init) {
   int dir = init/abs(init);
@@ -28,7 +23,8 @@ int driveCurve(int init) {
 }
 
 void drive(void *param){   
-    /** using top of file defs instead of these
+ 
+    /*
     Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
     Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
@@ -44,14 +40,16 @@ void drive(void *param){
       //int leftDir = left/abs(left);
       int right = master.get_analog(ANALOG_RIGHT_Y);
       //int rightDir = right/abs(right);
-      
-      /** old motors, now using the top of file defs instead of beginning of function
+     
+     dr->moveLeft(left);
+     dr->moveRight(right);
+
+      /*
       leftF.move(left);
       leftB.move(left);
       rightF.move(right);
       rightB.move(right);
       */
-
       /*
       leftFront.move(left);
       leftBack.move(left);
@@ -99,6 +97,8 @@ void flywheelTask(void *param){
     }
     while(isFlying){
       flywheel1.move(flyPow);
+      if(!isShooting)
+        intake.move(flyPow);
       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1){
         isFlying = !isFlying;
         flywheel1.move(0);
@@ -117,9 +117,12 @@ void flywheelTask(void *param){
         intake.move(0);
       }
       */
-      pros::lcd::set_text(1, std::to_string(-flywheel1.get_actual_velocity()));
+      pros::lcd::set_text(1, "fly: " + std::to_string(flywheel1.get_actual_velocity()));
+      pros::lcd::set_text(3, "flytemp: " + std::to_string(flywheel1.get_temperature()));
       pros::Task::delay(10);
     }
+    pros::lcd::set_text(1, "fly: " + std::to_string(flywheel1.get_actual_velocity()));
+    pros::lcd::set_text(3, "flytemp: " + std::to_string(flywheel1.get_temperature()));
   }
 }
 
@@ -127,29 +130,16 @@ void flywheelTask(void *param){
 void intakeTask(void* param){
   while (true){
   pros::Controller master(pros::E_CONTROLLER_MASTER);
-    while (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1){
-      intake.move(127);
-      pros::Task::delay(10);
-      isOuttaking = false;
-    }
-    while(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1){
+    while(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1){
       intake.move(-127);
       pros::Task::delay(10);
-      isOuttaking = false;
+      isShooting = true;
+      pros::lcd::set_text(2, "int: " + std::to_string(intake.get_actual_velocity()));
+      pros::lcd::set_text(4, "inttemp: " + std::to_string(intake.get_temperature()));
     }
-    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X) == 1){
-      isOuttaking = !isOuttaking;
-      pros::Task::delay(200);
-    }
-    else{
-      pros::Task::delay(10);
-    }
-    if (!isIntaking){
-      intake.move(0);
-    }
-    if (isOuttaking){
-      intake.move(-127);
-    }
+    pros::lcd::set_text(2, "int: " + std::to_string(intake.get_actual_velocity()));
+    pros::lcd::set_text(4, "inttemp: " + std::to_string(intake.get_temperature()));
+    isShooting = false;
     pros::Task::delay(10);    
   }
 }       
