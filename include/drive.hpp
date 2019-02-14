@@ -1,5 +1,5 @@
-#ifndef drive_hpp
-#define drive_hpp
+#ifndef DRIVE_HPP
+#define DRIVE_HPP
 
 #include "main.h"
 
@@ -18,8 +18,6 @@ class Drive {
         void pidMoveRight(double position, std::int32_t velocity);
         void pidMoveAll(double position, std::int32_t velocity);
         void pidTurn(double position, std::int32_t velocity);
-
-
 };
 
 #endif
