@@ -31,12 +31,14 @@ void redFront() {
 
     //pid drive doesn't go straight for some reason, need to multiply right side by a constant
     //drive forward and pick up ball
-    peA->moveFly(127);
+    peA->moveFly(94);
+    peA->moveInt(30);
+    peA->moveInd(-50);
     drA->pidMoveAll(3.4, PID_VEL);
     pros::Task::delay(2400);
     
     drA->moveAll(-100);
-    peA->pidMoveInt(3, 127);
+    peA->pidMoveInt(2, 127);
     peA->moveInd(-50);
     pros::Task::delay(100);
     peA->moveInd(0);
@@ -46,9 +48,13 @@ void redFront() {
     drA->moveAll(-20);
     pros::Task::delay(300);
 
-    drA->pidMoveAll(.2, 80);
-    pros::Task::delay(200);
-    drA->pidTurn(-.8, PID_VEL);
+    drA->pidMoveAll(.4, 80);
+    pros::Task::delay(500);
+    drA->pidTurn(-.78, PID_VEL);
+    pros::Task::delay(1000);
+    peA->pidMoveInd(.25, 200);
+    pros::Task::delay(400);
+
 
 }
 
