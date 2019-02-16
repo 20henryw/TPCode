@@ -27,7 +27,7 @@ pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
 */
 
 
-void redFront() {
+void blueFront() {
 
     //pid drive doesn't go straight for some reason, need to multiply right side by a constant
     //drive forward and pick up ball
@@ -64,7 +64,7 @@ void redFront() {
  * drA->functionName();
  **/
 void autonomous() {
-    redFront();
+    blueFront();
 }
 
 /**
