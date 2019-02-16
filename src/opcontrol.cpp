@@ -2,19 +2,17 @@
 #include "math.h"
 
 using namespace okapi;
-pros::Motor flywheel1(6, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor flywheel2(12, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intake(17, pros::E_MOTOR_GEARSET_06, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor flipper(7, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Controller partner(pros::E_CONTROLLER_PARTNER);
 
+bool intMoving = false;
+bool indMoving = false;
 bool isShooting = false;
 bool isFlying = false;
 bool isDown = false;
-int flyPow = 127;
+int flyPow = 94;
 
 
 Drive* drOp = new Drive();
+Peripherals* peOp = new Peripherals();
 
 int driveCurve(int init) {
   int dir = init/abs(init);
@@ -96,12 +94,10 @@ void flywheelTask(void *param){
       pros::Task::delay(10);
     }
     while(isFlying){
-      flywheel1.move(flyPow);
-      if(!isShooting)
-        intake.move(flyPow);
+      peOp->moveFly(flyPow);
       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1){
         isFlying = !isFlying;
-        flywheel1.move(0);
+        peOp->moveFly(0);
         pros::Task::delay(200);
       }
       /**
@@ -117,32 +113,55 @@ void flywheelTask(void *param){
         intake.move(0);
       }
       */
-      pros::lcd::set_text(1, "fly: " + std::to_string(flywheel1.get_actual_velocity()));
-      pros::lcd::set_text(3, "flytemp: " + std::to_string(flywheel1.get_temperature()));
+      peOp->printFlyVel(1);
+      peOp->printFlyTemp(3);
       pros::Task::delay(10);
     }
-    pros::lcd::set_text(1, "fly: " + std::to_string(flywheel1.get_actual_velocity()));
-    pros::lcd::set_text(3, "flytemp: " + std::to_string(flywheel1.get_temperature()));
+    peOp->printFlyVel(1);
+    peOp->printFlyTemp(3);
   }
 }
 
+void indexerTask(void* param) {
+  while(true) {
+    pros::Controller master(pros::E_CONTROLLER_MASTER);
+    while(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1) {
+      indMoving = true;
+      peOp->moveInd(127);
+      peOp->moveInt(127);
+      pros::Task::delay(10);
+    }
+    if (indMoving) {
+      indMoving = false;
+      peOp->moveInt(0);
+    }
+    peOp->moveInd(-10);
+    pros::Task::delay(10);
+  }
+}
 
 void intakeTask(void* param){
   while (true){
-  pros::Controller master(pros::E_CONTROLLER_MASTER);
+    pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1){
-      intake.move(-127);
+      intMoving = true;
+      peOp->moveInt(110);
+      peOp->moveInd(-127);
       pros::Task::delay(10);
-      isShooting = true;
-      pros::lcd::set_text(2, "int: " + std::to_string(intake.get_actual_velocity()));
-      pros::lcd::set_text(4, "inttemp: " + std::to_string(intake.get_temperature()));
     }
-    pros::lcd::set_text(2, "int: " + std::to_string(intake.get_actual_velocity()));
-    pros::lcd::set_text(4, "inttemp: " + std::to_string(intake.get_temperature()));
-    isShooting = false;
+    while(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1){
+      intMoving = true;
+      peOp->moveInt(-127);
+      pros::Task::delay(10);
+    }
+    if (intMoving) {
+      intMoving = false;
+      peOp->moveInt(0);
+    }
     pros::Task::delay(10);    
   }
-}       
+}
+
 
 /*
 void flipperTask(void* param){
@@ -191,6 +210,7 @@ void opcontrol() {
 
 	pros::Task startFly(flywheelTask);
 	pros::Task startDrive(drive);
+  pros::Task startIndexer(indexerTask);
 	pros::Task startIntake(intakeTask);
   //pros::Task startFlipper(flipperTask);
 }

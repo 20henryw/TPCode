@@ -2,7 +2,9 @@
 using namespace okapi;
 
 Drive* drA = new Drive();
+Peripherals* peA = new Peripherals();
 
+const int PID_VEL = 120;
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -24,13 +26,39 @@ pros::Motor flywheel1(1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_
 pros::Motor intake(6, pros::E_MOTOR_ENCODER_DEGREES);
 */
 
+
+void redFront() {
+
+    //pid drive doesn't go straight for some reason, need to multiply right side by a constant
+    //drive forward and pick up ball
+    peA->moveFly(127);
+    drA->pidMoveAll(3.4, PID_VEL);
+    pros::Task::delay(2400);
+    
+    drA->moveAll(-100);
+    peA->pidMoveInt(3, 127);
+    peA->moveInd(-50);
+    pros::Task::delay(100);
+    peA->moveInd(0);
+
+    //back up into wall
+    pros::Task::delay(1200);
+    drA->moveAll(-20);
+    pros::Task::delay(300);
+
+    drA->pidMoveAll(.2, 80);
+    pros::Task::delay(200);
+    drA->pidTurn(-.8, PID_VEL);
+
+}
+
 /**
  * 
  * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
  * drA->functionName();
  **/
 void autonomous() {
-
+    redFront();
 }
 
 /**
