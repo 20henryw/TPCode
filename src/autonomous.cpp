@@ -52,11 +52,13 @@ void redFront() {
     // move forward, shoot, move forward
     drA->pidMoveAll(2.35, PID_VEL);
     pros::Task::delay(1200);
-    peA->pidMoveInd(2, 200);
-    peA->pidMoveInt(2, PID_VEL);
-    pros::Task::delay(800);
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
+    pros::Task::delay(1500);
 
     //hit bottom flag, back up
+    drA->pidTurn(.16, 100);
+    pros::Task::delay(600);
     drA->pidMoveAll(1.7, PID_VEL);
     pros::Task::delay(1000);
     drA->pidMoveAll(-2.2, PID_VEL);
@@ -97,11 +99,13 @@ void blueFront() {
     // move forward, shoot, move forward
     drA->pidMoveAll(2.35, PID_VEL);
     pros::Task::delay(1200);
-    peA->pidMoveInd(2, 200);
-    peA->pidMoveInt(2, PID_VEL);
-    pros::Task::delay(800);
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
+    pros::Task::delay(1500);
 
     //hit bottom flag, back up
+    drA->pidTurn(-.16, 100);
+    pros::Task::delay(600);
     drA->pidMoveAll(1.7, PID_VEL);
     pros::Task::delay(1000);
     drA->pidMoveAll(-2.2, PID_VEL);
