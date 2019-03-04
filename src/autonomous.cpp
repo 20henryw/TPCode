@@ -28,7 +28,11 @@ const int rightAngTurn = .77; //right turn, positive turns counterclockwise
  * drA->function();
  * to contorl peripherals (flywheel, indexer, intake), use
  * peA->function();
- * text me if you have questions :)) good luck
+ * text me if you have questions :)) good luck 
+ * 
+ * ps if the turns don't mirror properly for both sides lmk
+ * you can change the pidMoveLeft and pidMoveRight functions to use hardcoded values (.12) instead
+ * of the variable name (midTurn). hopefully it'll mirror properly and you won't have to do this.
  */
 
 void redFront() {
