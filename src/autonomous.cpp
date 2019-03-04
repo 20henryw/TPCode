@@ -235,8 +235,8 @@ void counterBlueBack() {
     pros::Task::delay(500);
 
     //move left wheels to aim left at left post
-    drA->pidMoveLeft(-.7, 60);
-    pros::Task::delay(1500); // CHANGE DELAY    
+    drA->pidMoveLeft(-.68, 60);
+    pros::Task::delay(5500); // CHANGE DELAY    
 
     //shoot
     peA->pidMoveInd(3, 200);
@@ -244,13 +244,15 @@ void counterBlueBack() {
     pros::Task::delay(1500);
 
     //move left wheels to turn right at platform
-    drA->pidMoveLeft(.7, 60);
+    drA->pidMoveLeft(.68, 60);
     pros::Task::delay(1000);
 
     //park
+    drA->pidMoveAll(.18, 100);
+    pros::Task::delay(500);
     drA->moveLeft(107);
     drA->moveRight(103);
-    pros::Task::delay(1500);
+    pros::Task::delay(1325);
     drA->moveAll(-5);
 
 
