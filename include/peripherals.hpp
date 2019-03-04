@@ -20,6 +20,7 @@ class Peripherals {
         void pidMoveInt(double position, std::int32_t velocity);
         void printFlyVel(int line);
         void printFlyTemp(int line);
+        double getTopVel();
 };
 
 #endif

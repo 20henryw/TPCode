@@ -8,7 +8,13 @@ bool indMoving = false;
 bool isShooting = false;
 bool isFlying = false;
 bool isDown = false;
-int flyPow = 94;
+int flyPow = 104;
+int normRot = 520;
+int shotSlowRot = 475;
+int dShotPow = 75 ;
+int brakePow = -20;
+bool isMaxFly = false;
+bool dShot = false;
 
 
 Drive* drOp = new Drive();
@@ -31,55 +37,13 @@ void drive(void *param){
 
     pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(true){
-//          int left = driveCurve(master.get_analog(ANALOG_LEFT_Y));
-//          int right = driveCurve(master.get_analog(ANALOG_RIGHT_Y));
-      float exponent = 2;
-      int left = master.get_analog(ANALOG_LEFT_Y);
-      //int leftDir = left/abs(left);
-      int right = master.get_analog(ANALOG_RIGHT_Y);
-      //int rightDir = right/abs(right);
+        int left = master.get_analog(ANALOG_LEFT_Y);
+        int right = master.get_analog(ANALOG_RIGHT_Y);
      
-     drOp->moveLeft(left);
-     drOp->moveRight(right);
-
-      /*
-      leftF.move(left);
-      leftB.move(left);
-      rightF.move(right);
-      rightB.move(right);
-      */
-      /*
-      leftFront.move(left);
-      leftBack.move(left);
-      rightFront.move(right);
-      rightBack.move(right);
-
-      pros::lcd::set_text(3, std::to_string(leftFront.get_temperature()));
-      pros::lcd::set_text(4, std::to_string(leftBack.get_temperature()));
-      pros::lcd::set_text(5, std::to_string(rightFront.get_temperature()));
-      pros::lcd::set_text(6, std::to_string(rightBack.get_temperature()));
-      */
-
-      // leftFront = driveCurve(left);
-      // leftBack = driveCurve(left);
-      // rightFront = -driveCurve(right);
-      // rightBack = -driveCurve(right);
-
-        /**
-        //arcade turns assigned to right joystick (left / right)	
-        if(master.get_analog(ANALOG_RIGHT_X) < 0){
-            rightFront = master.get_analog(ANALOG_RIGHT_X);
-            rightBack = master.get_analog(ANALOG_RIGHT_X);
-            leftFront = master.get_analog((ANALOG_RIGHT_X)) * -1;
-            leftBack = master.get_analog((ANALOG_RIGHT_X)) * -1;
-        } 	else if(master.get_analog(ANALOG_RIGHT_X) > 0){
-            rightFront = master.get_analog(ANALOG_RIGHT_X) * -1;
-            rightBack = master.get_analog(ANALOG_RIGHT_X) * -1;
-            leftFront = master.get_analog((ANALOG_RIGHT_X));
-            leftBack = master.get_analog((ANALOG_RIGHT_X));
-        }
-        */
+        drOp->moveLeft(left);
+        drOp->moveRight(right);
         pros::Task::delay(10);
+  
     }
 }
 
@@ -100,6 +64,22 @@ void flywheelTask(void *param){
         peOp->moveFly(0);
         pros::Task::delay(200);
       }
+      if(std::abs(peOp->getTopVel()) > normRot){
+        isMaxFly = true;
+      }
+
+      if (isMaxFly && dShot){
+        if(std::abs(peOp->getTopVel()) < shotSlowRot){
+          isMaxFly = false;
+          pros::lcd::set_text(5, "breaking");
+          peOp->moveFly(brakePow);
+          pros::Task::delay(100);
+          peOp->moveFly(dShotPow);
+          pros::Task::delay(700);
+        }
+      }
+  
+      
       /**
       else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == 1 && isFlying){
         flywheel.move(30);
@@ -127,9 +107,19 @@ void indexerTask(void* param) {
     pros::Controller master(pros::E_CONTROLLER_MASTER);
     while(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1) {
       indMoving = true;
+      dShot = false;
       peOp->moveInd(127);
       peOp->moveInt(127);
       pros::Task::delay(10);
+      pros::lcd::set_text(5, "L1");
+    }
+    while(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1) {
+      indMoving = true;
+      dShot = true;
+      peOp->moveInd(127);
+      peOp->moveInt(127);
+      pros::Task::delay(10);
+      pros::lcd::set_text(5, "L2");
     }
     if (indMoving) {
       indMoving = false;

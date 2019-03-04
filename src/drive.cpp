@@ -76,3 +76,8 @@ void Drive::pidTurn(double position, std::int32_t velocity) {
     pidMoveLeft(-position, velocity);
     pidMoveRight(position, velocity);
 }
+
+ 
+bool Drive::isStopped() {
+    return (lFDrive.is_stopped() + lBDrive.is_stopped() + rFDrive.is_stopped() + rBDrive.is_stopped()) == 4;
+}

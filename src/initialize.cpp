@@ -4,6 +4,7 @@ void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
+		pressed = !pressed;
 		pros::lcd::set_text(2, "I was pressed!");
 	} else {
 		pros::lcd::clear_line(2);
@@ -14,6 +15,7 @@ void on_left_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
+		pressed = !pressed;
 		//autonNum = 0; figure out how to also use autonNum in autonomous.cpp
 	} else {
 		pros::lcd::set_text(2, "Red Selected");
@@ -24,6 +26,7 @@ void on_right_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
+		pressed = !pressed;		
 		//autonNum = 1; figure out how to also use autonNum in autonomous.cpp
 	} else {
 		pros::lcd::set_text(2, "Blue Selected");

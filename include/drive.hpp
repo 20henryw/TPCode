@@ -18,6 +18,7 @@ class Drive {
         void pidMoveRight(double position, std::int32_t velocity);
         void pidMoveAll(double position, std::int32_t velocity);
         void pidTurn(double position, std::int32_t velocity);
+        bool isStopped();
 };
 
 #endif

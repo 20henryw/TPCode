@@ -213,14 +213,55 @@ void blueBack() {
     rightB.move(-5);
 }
 
+void counterBlueBack() {
+    //drive forward and intake ball, back up
+    peA->moveFly(94);
+    peA->moveInt(127);
+    peA->moveInd(-110);
+    drA->pidMoveAll(3.15, 100);
+    pros::Task::delay(2400);
+    drA->pidMoveAll(-.63, 100);
+    pros::Task::delay(500);
+    peA->moveInt(0);
+    peA->moveInd(0);
 
+
+    //turn right, align into parking platform, back up
+    drA->pidTurn(-.77, PID_VEL);
+    pros::Task::delay(1000);
+    drA->moveAll(60);
+    pros::Task::delay(500);
+    drA->pidMoveAll(-.2, 100);
+    pros::Task::delay(500);
+
+    //move left wheels to aim left at left post
+    drA->pidMoveLeft(-.7, 60);
+    pros::Task::delay(1500); // CHANGE DELAY    
+
+    //shoot
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
+    pros::Task::delay(1500);
+
+    //move left wheels to turn right at platform
+    drA->pidMoveLeft(.7, 60);
+    pros::Task::delay(1000);
+
+    //park
+    drA->moveLeft(107);
+    drA->moveRight(103);
+    pros::Task::delay(1500);
+    drA->moveAll(-5);
+
+
+}
 /**
  * 
  * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
  * drA->functionName();
  **/
 void autonomous() {
-        switch (0) {
+        switch (4) {
         case 0: redFront();
         break;
         case 1: blueFront();
@@ -228,6 +269,8 @@ void autonomous() {
         case 2: redBack();
         break;
         case 3: blueBack();
+        break;
+        case 4: counterBlueBack();
         break;
     }
 
