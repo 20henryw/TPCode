@@ -5,6 +5,10 @@ Drive* drA = new Drive();
 Peripherals* peA = new Peripherals();
 
 const int PID_VEL = 120;
+
+const int midTurn = .12; //turn from platform to face mid post !! THIS NEEDS TO BE CHANGED !!
+const int farTurn = .68; //turn from platform to face oppo color post
+const int rightAngTurn = .77; //right turn, positive turns counterclockwise
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -17,7 +21,15 @@ const int PID_VEL = 120;
  * from where it left off.
  */
 
-
+/**
+ * Tune the two back middle autons. Change the midTurn variable. They might also need double shot,
+ * which you can copy from the flywheel task in opcontrol. look at drive.cpp and peripherals.cpp
+ * for supported functions. to control the drive, use
+ * drA->function();
+ * to contorl peripherals (flywheel, indexer, intake), use
+ * peA->function();
+ * text me if you have questions :)) good luck
+ */
 
 void redFront() {
 
@@ -113,107 +125,95 @@ void blueFront() {
     drA->pidTurn(.78, PID_VEL);
 }
 
-/* Red back. Shoots High middle, then turns and gets ball under cap, then parks.
- ***/
-void redBack() {
-    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor flywheel1(1, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor indexer(18, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+void redBackMid() {
+    //drive forward and intake ball, back up
+    peA->moveFly(94);
+    peA->moveInt(127);
+    peA->moveInd(-110);
+    drA->pidMoveAll(3.15, 100);
+    pros::Task::delay(2400);
+    drA->pidMoveAll(-.63, 100);
+    pros::Task::delay(500);
+    peA->moveInt(0);
+    peA->moveInd(0);
 
-    ChassisControllerIntegrated drive_controller = ChassisControllerFactory::create(
-    leftF, rightF, rightB, leftB,
-	AbstractMotor::gearset::green,
-	{4_in, 15.5_in}
-    );
 
-    flywheel1.move(85);
-    flywheel2.move(85);
+    //turn left, align into parking platform, back up
+    drA->pidTurn(rightAngTurn, PID_VEL);
+    pros::Task::delay(1000);
+    drA->moveAll(60);
+    pros::Task::delay(500);
+    drA->pidMoveAll(-.2, 100);
+    pros::Task::delay(500);
 
-    pros::Task::delay(4700);
-    intake.move(110);
-    indexer.move(105);
+    //move right wheels back to face middle flags
+    drA->pidMoveRight(-midTurn, 60);
+    pros::Task::delay(5500); // CHANGE DELAY    
+
+    //shoot !! THIS NEEDS TO BE CHANGED !! might need double shot, use timing instead of pid if it's easier
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
     pros::Task::delay(1500);
-    flywheel1.move(0);
-    flywheel2.move(0);
-    drive_controller.turnAngleAsync(48_deg);
-    drive_controller.waitUntilSettled();
-    pros::Task::delay(25);
-    drive_controller.moveDistanceAsync(42_in);
-    drive_controller.waitUntilSettled();
-    intake.move(0);
-    indexer.move(0);
-    drive_controller.moveDistance(-6.5_in);
-    drive_controller.waitUntilSettled();   
-    drive_controller.turnAngle(-70_deg);
-    pros::Task::delay(50);
-    drive_controller.waitUntilSettled();
-    leftF.move(107);
-    leftB.move(107);
-    rightF.move(103);
-    rightB.move(103);
-    pros::Task::delay(1250);
-    leftF.move(-5);
-    leftB.move(-5);
-    rightF.move(-5);
-    rightB.move(-5);
+
+    //move right wheels forward to face platform
+    drA->pidMoveRight(midTurn, 60);
+    pros::Task::delay(1000);
+
+    //park
+    drA->pidMoveAll(.18, 100);
+    pros::Task::delay(500);
+    drA->moveLeft(107);
+    drA->moveRight(103);
+    pros::Task::delay(1325);
+    drA->moveAll(-5);
 }
 
-/* Blue back. Shoots High middle, then turns and gets ball under cap, then parks.
- ***/
-void blueBack() {
-    Motor leftF(11, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor leftB(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor rightF(2, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor rightB(4, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor flywheel1(1, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor flywheel2(12, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor indexer(18, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
-    Motor intake(6, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
-    ChassisControllerIntegrated drive_controller = ChassisControllerFactory::create(
-    leftF, rightF, rightB, leftB,
-	AbstractMotor::gearset::green,
-	{4_in, 15.5_in}
-    );
+void redBackRight() {
+    //drive forward and intake ball, back up
+    peA->moveFly(94);
+    peA->moveInt(127);
+    peA->moveInd(-110);
+    drA->pidMoveAll(3.15, 100);
+    pros::Task::delay(2400);
+    drA->pidMoveAll(-.63, 100);
+    pros::Task::delay(500);
+    peA->moveInt(0);
+    peA->moveInd(0);
 
-    flywheel1.move(85);
-    flywheel2.move(85);
 
-    pros::Task::delay(4700);
-    intake.move(110);
-    indexer.move(105);
+    //turn left, align into parking platform, back up
+    drA->pidTurn(rightAngTurn, PID_VEL);
+    pros::Task::delay(1000);
+    drA->moveAll(60);
+    pros::Task::delay(500);
+    drA->pidMoveAll(-.2, 100);
+    pros::Task::delay(500);
+
+    //move right wheels back to face left flags
+    drA->pidMoveRight(-farTurn, 60);
+    pros::Task::delay(5500); // CHANGE DELAY    
+
+    //shoot
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
     pros::Task::delay(1500);
-    flywheel1.move(0);
-    flywheel2.move(0);
-    drive_controller.turnAngleAsync(-48_deg);
-    drive_controller.waitUntilSettled();
-    pros::Task::delay(25);
-    drive_controller.moveDistanceAsync(42_in);
-    drive_controller.waitUntilSettled();
-    intake.move(0);
-    indexer.move(0);
-    drive_controller.moveDistance(-6.5_in);
-    drive_controller.waitUntilSettled();   
-    drive_controller.turnAngle(70_deg);
-    pros::Task::delay(50);
-    drive_controller.waitUntilSettled();
-    leftF.move(107);
-    leftB.move(107);
-    rightF.move(103);
-    rightB.move(103);
-    pros::Task::delay(1250);
-    leftF.move(-5);
-    leftB.move(-5);
-    rightF.move(-5);
-    rightB.move(-5);
+
+    //move right wheels forward to face platform
+    drA->pidMoveRight(farTurn, 60);
+    pros::Task::delay(1000);
+
+    //park
+    drA->pidMoveAll(.18, 100);
+    pros::Task::delay(500);
+    drA->moveLeft(107);
+    drA->moveRight(103);
+    pros::Task::delay(1325);
+    drA->moveAll(-5);
 }
 
-void counterBlueBack() {
+
+void blueBackMid() {
     //drive forward and intake ball, back up
     peA->moveFly(94);
     peA->moveInt(127);
@@ -227,24 +227,24 @@ void counterBlueBack() {
 
 
     //turn right, align into parking platform, back up
-    drA->pidTurn(-.77, PID_VEL);
+    drA->pidTurn(-rightAngTurn, PID_VEL);
     pros::Task::delay(1000);
     drA->moveAll(60);
     pros::Task::delay(500);
     drA->pidMoveAll(-.2, 100);
     pros::Task::delay(500);
 
-    //move left wheels to aim left at left post
-    drA->pidMoveLeft(-.68, 60);
+    //move left wheels back to face middle flags
+    drA->pidMoveLeft(-midTurn, 60);
     pros::Task::delay(5500); // CHANGE DELAY    
 
-    //shoot
+    //shoot  !! THIS NEEDS TO BE CHANGED !! might need double shot, use timing instead of pid if it's easier
     peA->pidMoveInd(3, 200);
     peA->pidMoveInt(3, 200);
     pros::Task::delay(1500);
 
-    //move left wheels to turn right at platform
-    drA->pidMoveLeft(.68, 60);
+    //move left wheels forward to face platform
+    drA->pidMoveLeft(midTurn, 60);
     pros::Task::delay(1000);
 
     //park
@@ -254,9 +254,52 @@ void counterBlueBack() {
     drA->moveRight(103);
     pros::Task::delay(1325);
     drA->moveAll(-5);
-
-
 }
+
+
+void blueBackLeft() {
+    //drive forward and intake ball, back up
+    peA->moveFly(94);
+    peA->moveInt(127);
+    peA->moveInd(-110);
+    drA->pidMoveAll(3.15, 100);
+    pros::Task::delay(2400);
+    drA->pidMoveAll(-.63, 100);
+    pros::Task::delay(500);
+    peA->moveInt(0);
+    peA->moveInd(0);
+
+
+    //turn right, align into parking platform, back up
+    drA->pidTurn(-rightAngTurn, PID_VEL);
+    pros::Task::delay(1000);
+    drA->moveAll(60);
+    pros::Task::delay(500);
+    drA->pidMoveAll(-.2, 100);
+    pros::Task::delay(500);
+
+    //move left wheels back to face left flags
+    drA->pidMoveLeft(-farTurn, 60);
+    pros::Task::delay(5500); // CHANGE DELAY    
+
+    //shoot
+    peA->pidMoveInd(3, 200);
+    peA->pidMoveInt(3, 200);
+    pros::Task::delay(1500);
+
+    //move left wheels forward to face platform
+    drA->pidMoveLeft(farTurn, 60);
+    pros::Task::delay(1000);
+
+    //park
+    drA->pidMoveAll(.18, 100);
+    pros::Task::delay(500);
+    drA->moveLeft(107);
+    drA->moveRight(103);
+    pros::Task::delay(1325);
+    drA->moveAll(-5);
+}
+
 /**
  * 
  * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
@@ -268,11 +311,13 @@ void autonomous() {
         break;
         case 1: blueFront();
         break;
-        case 2: redBack();
+        case 2: redBackMid();
         break;
-        case 3: blueBack();
+        case 3: redBackRight();
         break;
-        case 4: counterBlueBack();
+        case 4: blueBackMid();
+        break;
+        case 5: blueBackLeft();
         break;
     }
 
