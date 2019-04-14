@@ -31,10 +31,11 @@ class Drive
     void tareMotors();
     void actualDrive(int sp);
     void actualTurn(int sp);
+    bool isStopped();
     void waitForDriveCompletion();
     void waitForLeftCompletion();
     void waitForRightCompletion();
-    bool isStopped();
+    void waitForStop();
 };
 
 #endif

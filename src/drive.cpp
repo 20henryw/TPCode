@@ -25,7 +25,7 @@ static int driveMode = 1;
 static int driveTarget = 0;
 static int turnTarget = 0;
 int maxSpeed = 127;
-double pidError = 0.1;
+double pidError = 0.05;
 
 double lFTarget = 0;
 double lBTarget = 0;
@@ -336,18 +336,17 @@ void Drive::waitForDriveCompletion()
 
 void Drive::waitForLeftCompletion()
 {
-    while ((abs(lBDrive.get_position() - lBDrive.get_target_position()) +
-            abs(lFDrive.get_position() - lFDrive.get_target_position())) > pidError * 2)
+    while ((abs(lFDrive.get_position() - lFTarget) +
+            abs(lBDrive.get_position() - lBTarget)) > pidError * 2)
     {
-
         pros::Task::delay(5);
     }
 }
 
 void Drive::waitForRightCompletion()
 {
-    while ((abs(rBDrive.get_position() - rBDrive.get_target_position()) +
-            abs(rFDrive.get_position() - rFDrive.get_target_position())) > pidError * 2)
+    while ((abs(rFDrive.get_position() - rFTarget) +
+            abs(rBDrive.get_position() - rBTarget)) > pidError * 2)
     {
         pros::Task::delay(5);
     }
@@ -355,6 +354,8 @@ void Drive::waitForRightCompletion()
 
 void Drive::pidMoveLeft(double position, std::int32_t velocity)
 {
+    lFTarget += position;
+    lBTarget += position;
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     waitForLeftCompletion();
@@ -362,6 +363,8 @@ void Drive::pidMoveLeft(double position, std::int32_t velocity)
 
 void Drive::pidMoveRight(double position, std::int32_t velocity)
 {
+    rFTarget += position;
+    rBTarget += position;
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForRightCompletion();
@@ -396,4 +399,13 @@ void Drive::pidTurn(double position, std::int32_t velocity)
 bool Drive::isStopped()
 {
     return (lFDrive.is_stopped() + lBDrive.is_stopped() + rFDrive.is_stopped() + rBDrive.is_stopped()) == 4;
+}
+
+void Drive::waitForStop()
+{
+    while(!isStopped())
+    {
+        pros::lcd::set_text(0,"not stopped");
+        pros::Task::delay(5);
+    }
 }
