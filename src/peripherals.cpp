@@ -64,9 +64,10 @@ void Peripherals::scrBrake(pros::motor_brake_mode_e_t mode)
     scraper.set_brake_mode(mode); 
 }
 
-void Peripherals::tareScr()
+void Peripherals::resetScr()
 {
-    scraper.tare_position();
+      pidAbsScr(0, 100);
+      pros::Task::delay(400);
 }
 
 void Peripherals::pidAbsScr(double position, std::int32_t velocity)
@@ -124,10 +125,14 @@ double Peripherals::getScrPos()
     return scraper.get_position();
 }
 
+/*
+* Moves the scarper to the base firing position and tares the motor encoder at that position
+*/
 void Peripherals::scrBase()
 {
     moveScr(127);
     pros::Task::delay(300);
-    pidMoveScr(.05, 60);
-    pros::Task::delay(300);
+    pidMoveScr(-.05, 150);
+    pros::Task::delay(400);
+    scraper.tare_position();
 }

@@ -22,7 +22,7 @@ class Peripherals
     void pidMoveInt(double position, std::int32_t velocity);
     void pidMoveScr(double position, std::int32_t velocity);
     void scrBrake(pros::motor_brake_mode_e_t mode); 
-    void tareScr();
+    void resetScr();
     void pidAbsScr(double position, std::int32_t velocity);
     void printFlyVel(int line);
     void printPressed(int line);

@@ -9,7 +9,7 @@
 const int LF_PORT = 9;
 const int LB_PORT = 10;
 const int RF_PORT = 8;
-const int RB_PORT = 7;
+const int RB_PORT = 6;
 
 const pros::motor_gearset_e_t LF_GEAR = pros::E_MOTOR_GEARSET_18;
 const pros::motor_gearset_e_t LB_GEAR = pros::E_MOTOR_GEARSET_18;

@@ -8,7 +8,8 @@ bool indMoving = false;
 bool isShooting = false;
 bool isFlying = false;
 
-int flyPow = 110;
+int normPow = 110;
+int backPow = 99;
 int dShotPow = 50;
 int brakePow = -45;
 
@@ -68,24 +69,51 @@ void drive(void *param)
 void flywheel(void *param)
 {
   pros::Controller master(pros::E_CONTROLLER_MASTER);
+  int flyPow = normPow;
   while (true)
   {
+
+    
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1)
     {
+      flyPow = normPow;
       isFlying = !isFlying;
       pros::Task::delay(200);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1)
+    {
+      flyPow = backPow;
+      isFlying = !isFlying;
+      pros::Task::delay(200);
+
     }
     else
     {
       pros::Task::delay(10);
     }
+
+
     while (isFlying)
     {
+      pros::lcd::set_text(4, std::to_string(flyPow));
       peOp->moveFly(flyPow);
       if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B) == 1)
       {
         isFlying = !isFlying;
+        flyPow = normPow;
         peOp->moveFly(0);
+        pros::Task::delay(200);
+      }
+      if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1)
+      {
+        if (flyPow == normPow)
+        {
+          flyPow = backPow;
+        }
+        else
+        {
+          flyPow = normPow;
+        }
         pros::Task::delay(200);
       }
       pros::Task::delay(10);
@@ -123,13 +151,6 @@ void doubleShotHW()
   pros::Task::delay(500);
 }
 
-void resetScr()
-{
-    peOp->pidAbsScr(0, 100);
-    Task::delay(500);
-  
-  return;
-}
 void indexer(void *param)
 {
   while (true)
@@ -140,8 +161,8 @@ void indexer(void *param)
       indMoving = true;
       dShot2 = false;
       peOp->moveInd(127);
-      peOp->moveInt(127);
-      pros::Task::delay(10);
+      peOp->moveInt(80);
+      
       pros::lcd::set_text(5, "L1");
     }
     while (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2) == 1)
@@ -159,14 +180,14 @@ void indexer(void *param)
         Task::delay(5);
       }
 
-      pros::lcd::set_text(6, "toggle");
+      printf("toggle");
 
       dShot2 = true;
 
       peOp->moveScr(127);
-      Task::delay(600);
+      Task::delay(200);
 
-      resetScr();
+      peOp->resetScr();
       pros::lcd::set_text(5, "L2");
       dShot2 = false;
       Task::delay(5);
@@ -204,12 +225,8 @@ void scraper(void *param)
       peOp->moveScr(-50);
     }
 
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
-    {
-      peOp->tareScr();
-    }
 
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
     {
       peOp->scrBase();
     }
@@ -262,6 +279,9 @@ void intake(void *param)
       intMoving = false;
       peOp->moveInt(0);
     }
+     peOp->printFlyPow(1);
+    peOp->printFlyVel(2);
+    peOp->printFlyTemp(3);
     pros::Task::delay(10);
   }
 }
