@@ -26,10 +26,9 @@ const double rightAngTurn = -leftAngTurn; //right turn, positive turns countercl
 
 void blueBack()
 {
-  drA->reset(); 
   peA->moveFly(30);
   pros::lcd::set_text(0,"start move");
-  drA->pidMoveAll(.5, 100);
+  drA->pidTurn(3.2, 100);
 }
 
 
