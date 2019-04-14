@@ -29,7 +29,6 @@ void blueBack()
   peA->moveFly(30);
   pros::lcd::set_text(0,"start move");
   drA->pidTurn(3.2, 100);
-  drA->waitForStop();
   drA->pidMoveAll(1.5, 100);
   drA->pidMoveLeft(1, 100);
   drA->pidMoveRight(1, 100);

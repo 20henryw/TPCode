@@ -359,6 +359,7 @@ void Drive::pidMoveLeft(double position, std::int32_t velocity)
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     waitForLeftCompletion();
+    pros::Task::delay(50);
 }
 
 void Drive::pidMoveRight(double position, std::int32_t velocity)
@@ -368,6 +369,7 @@ void Drive::pidMoveRight(double position, std::int32_t velocity)
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForRightCompletion();
+    pros::Task::delay(50);
 }
 
 void Drive::pidMoveAll(double position, std::int32_t velocity)
@@ -381,6 +383,7 @@ void Drive::pidMoveAll(double position, std::int32_t velocity)
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForDriveCompletion();
+    pros::Task::delay(50);
 }
 
 void Drive::pidTurn(double position, std::int32_t velocity)
@@ -394,6 +397,7 @@ void Drive::pidTurn(double position, std::int32_t velocity)
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForDriveCompletion();
+    pros::Task::delay(50);
 }
 
 bool Drive::isStopped()
