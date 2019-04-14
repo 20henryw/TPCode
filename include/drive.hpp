@@ -32,6 +32,8 @@ class Drive
     void actualDrive(int sp);
     void actualTurn(int sp);
     void waitForDriveCompletion();
+    void waitForLeftCompletion();
+    void waitForRightCompletion();
     bool isStopped();
 };
 
