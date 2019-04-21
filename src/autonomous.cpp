@@ -12,6 +12,10 @@ const double leftAngTurn = .84;          // left turn, neg. go clockwise
 const double leftAngTurnt = .82;          // left turn, neg. go clockwise
 const double rightAngTurn = -leftAngTurn; //right turn, positive turns counterclockwise
 
+std::uint8_t lsAPort = 2; //limitswitch port
+ADIPort lsA (lsAPort, E_ADI_DIGITAL_IN); //limitswitch
+
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -24,16 +28,140 @@ const double rightAngTurn = -leftAngTurn; //right turn, positive turns countercl
  * from where it left off.
  */
 
-void blueBack()
+void dS()
 {
-  peA->moveFly(30);
-  pros::lcd::set_text(0,"start move");
-  drA->pidTurn(3.2, 100);
-  drA->pidMoveAll(1.5, 100);
-  drA->pidMoveLeft(1, 100);
-  drA->pidMoveRight(1, 100);
+  int prevVal = lsA.get_value();
+  bool l2 = true;
+  peA->moveInd(127);
+  peA->moveInt(127);
+  lcd::set_text(1, "ds");
+
+  while(prevVal == lsA.get_value() || lsA.get_value() == 1 )
+    {
+      prevVal = lsA.get_value();
+      Task::delay(5);
+    }
+
+  peA->moveScr(127);
+  Task::delay(200);
+  peA->resetScr();
+  peA->moveInd(0);
+  peA->moveInt(0);
 }
 
+void shoot()
+{
+  peA->moveInd(127);
+  peA->moveInt(127);
+  Task::delay(200);
+  peA->moveInd(127);
+  peA->moveInt(127);
+
+}
+void blueBack()
+{
+  pros::lcd::set_text(0,"start move");
+  drA->pidTurn(3.12, 100);
+  drA->waitForStop();
+
+}
+
+void redFrontSideMid()
+{
+
+  //drive forward, pickup ball
+  peA->moveFly(110);
+  peA->moveInt(100);
+  peA->scrBase();
+  drA->pidMoveAll(3.18 , PID_VEL);
+  drA->waitForStop();
+
+  //back up, align with wall
+  peA->pidAbsScr(0, 100);
+  drA->pidMoveAll(-3.03, PID_VEL);
+  drA->moveAll(-90);
+  Task::delay(300);
+
+  //drive forward, turn right to face side flags
+  peA->moveInt(80);
+  lcd::set_text(0, "start moving forward");
+  drA->pidMoveAll(.2, 127);
+  lcd::set_text(7, "done moving forward");
+  drA->pidTurn(.76, 80);
+  drA->waitForStop();
+  drA->pidMoveAll(1, 127);
+  drA->waitForStop();
+  lcd::set_text(0, "start shoot");
+  
+  //shoot, toggle bottom flag
+  dS();
+  drA->pidTurn(.04, 127);
+  drA->pidMoveAll(2.2, 127);
+  peA->pidMoveScr(-.15,127);
+
+}
+
+void blueFrontSideMid()
+{
+
+  //drive forward, pickup ball
+  peA->moveFly(110);
+  peA->moveInt(100);
+  peA->scrBase();
+  drA->pidMoveAll(3.18 , PID_VEL);
+  drA->waitForStop();
+
+  //back up, align with wall
+  peA->pidAbsScr(0, 100);
+  drA->pidMoveAll(-3.03, PID_VEL);
+  drA->moveAll(-90);
+  Task::delay(300);
+
+  //drive forward, turn right to face side flags
+  peA->moveInt(80);
+  lcd::set_text(0, "start moving forward");
+  drA->pidMoveAll(.2, 127);
+  lcd::set_text(7, "done moving forward");
+  drA->pidTurn(-.76, 80);
+  drA->waitForStop();
+  drA->pidMoveAll(1, 127);
+  drA->waitForStop();
+  lcd::set_text(0, "start shoot");
+  
+  //shoot, toggle bottom flag
+  dS();
+  drA->pidTurn(-.08, 127);
+  drA->pidMoveAll(2.2, 127);
+  peA->pidMoveScr(-.15,127);
+}
+
+void redBack()
+{
+
+  //drive forward, pickup ball
+  peA->moveFly(95);
+  peA->moveInt(100);
+  peA->scrBase();
+  drA->pidMoveAll(3.18 , PID_VEL);
+  drA->waitForStop();
+
+  //back up, align with platform
+  drA->pidMoveAll(-.25, PID_VEL);
+  Task::delay(200);
+  // drA->waitForStop();
+  drA->pidTurn(.76,80);
+  drA->moveAll(70);
+  Task::delay(250);
+
+  //aim, shoot
+  drA->pidMoveAll(-.34, 50);
+  drA->waitForStop();
+
+  drA->pidTurn(-.101, 50);
+  drA->waitForStop();
+  shoot();
+
+}
 
 /**
  * 
@@ -45,11 +173,21 @@ void autonomous()
   drA->reset(); 
   //pros::Task startDriveAuton(PIDDrive);
   //pros::Task startTurnAuton(turnTask);
-  switch (0)
+  switch (2)
   {
   case 0:
+    redFrontSideMid();
+    break;
+  case 1:
+    blueFrontSideMid();
+    break;
+  case 2:
+    redBack();
+    break;
+  case 3:
     blueBack();
     break;
+
   }
   //startDriveAuton.stop(); 
   //startTurnAuton.stop(); 

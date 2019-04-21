@@ -2,9 +2,9 @@
 #include "drive.hpp"
 
 #define KF 0
-#define KP 0.8f
-#define KI 0.001f
-#define KD 0.1f
+#define KP 0.9f
+#define KI 0.0f
+#define KD 0.08f
 
 const int LF_PORT = 9;
 const int LB_PORT = 10;
@@ -25,7 +25,8 @@ static int driveMode = 1;
 static int driveTarget = 0;
 static int turnTarget = 0;
 int maxSpeed = 127;
-double pidError = 0.05;
+double pidError = 0.075;
+double stopError = 0.15;
 
 double lFTarget = 0;
 double lBTarget = 0;
@@ -313,25 +314,14 @@ void Drive::actualTurn(int sp)
 
 void Drive::waitForDriveCompletion()
 {
-    pros::lcd::set_text(1, "enter wait");
-    pros::lcd::set_text(2, std::to_string(lFDrive.get_position()));
-    pros::lcd::set_text(3, std::to_string(lFTarget));
     while ((abs(lFDrive.get_position() - lFTarget) +
             abs(lBDrive.get_position() - lBTarget) +
             abs(rFDrive.get_position() - rFTarget) +
             abs(rBDrive.get_position() - rBTarget)) > (pidError * 4))
     {
-        pros::lcd::set_text(4, std::to_string(lFDrive.get_position()));
-        pros::lcd::set_text(5, std::to_string(lFTarget));
-        pros::lcd::set_text(6, std::to_string(
-            (abs(lFDrive.get_position() - lFTarget) +
-            abs(lBDrive.get_position() - lBTarget) +
-            abs(rFDrive.get_position() - rFTarget) +
-            abs(rBDrive.get_position() - rBTarget))));
-        pros::lcd::set_text(7, std::to_string(pidError * 4));
+        pros::lcd::set_text(7, std::to_string(abs(lFDrive.get_position() - lFTarget)));
         pros::Task::delay(5);
     }
-    pros::lcd::set_text(7, "exit wait");
 }
 
 void Drive::waitForLeftCompletion()
@@ -354,8 +344,10 @@ void Drive::waitForRightCompletion()
 
 void Drive::pidMoveLeft(double position, std::int32_t velocity)
 {
-    lFTarget += position;
-    lBTarget += position;
+    lFDrive.tare_position();
+    lBDrive.tare_position();
+    lFTarget = position;
+    lBTarget = position;
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     waitForLeftCompletion();
@@ -364,8 +356,10 @@ void Drive::pidMoveLeft(double position, std::int32_t velocity)
 
 void Drive::pidMoveRight(double position, std::int32_t velocity)
 {
-    rFTarget += position;
-    rBTarget += position;
+    rFDrive.tare_position();
+    rBDrive.tare_position();
+    rFTarget = position;
+    rBTarget = position;
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForRightCompletion();
@@ -374,10 +368,14 @@ void Drive::pidMoveRight(double position, std::int32_t velocity)
 
 void Drive::pidMoveAll(double position, std::int32_t velocity)
 {
-    lFTarget += position;
-    lBTarget += position;
-    rFTarget += position;
-    rBTarget += position;
+    lFDrive.tare_position();
+    lBDrive.tare_position();
+    rFDrive.tare_position();
+    rBDrive.tare_position();
+    lFTarget = position;
+    lBTarget = position;
+    rFTarget = position;
+    rBTarget = position;
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     rFDrive.move_relative(position, velocity);
@@ -388,10 +386,14 @@ void Drive::pidMoveAll(double position, std::int32_t velocity)
 
 void Drive::pidTurn(double position, std::int32_t velocity)
 {
-    lFTarget += -position;
-    lBTarget += -position;
-    rFTarget += position;
-    rBTarget += position;
+    lFDrive.tare_position();
+    lBDrive.tare_position();
+    rFDrive.tare_position();
+    rBDrive.tare_position();
+    lFTarget = -position;
+    lBTarget = -position;
+    rFTarget = position;
+    rBTarget = position;
     lFDrive.move_relative(-position, velocity);
     lBDrive.move_relative(-position, velocity);
     rFDrive.move_relative(position, velocity);
@@ -407,9 +409,21 @@ bool Drive::isStopped()
 
 void Drive::waitForStop()
 {
-    while(!isStopped())
+    pros::lcd::set_text(1, "enter stop wait");
+    while ((abs(lFDrive.get_actual_velocity()) +
+            abs(lBDrive.get_actual_velocity()) +
+            abs(rFDrive.get_actual_velocity()) +
+            abs(rBDrive.get_actual_velocity())) > (stopError * 4))
     {
-        pros::lcd::set_text(0,"not stopped");
+        pros::lcd::set_text(4, std::to_string(lFDrive.get_actual_velocity()));
+        pros::lcd::set_text(5, std::to_string(
+            (abs(lFDrive.get_actual_velocity()) +
+            abs(lBDrive.get_actual_velocity()) +
+            abs(rFDrive.get_actual_velocity()) +
+            abs(rBDrive.get_actual_velocity()))));
+        pros::lcd::set_text(6, std::to_string(pidError * 4));
         pros::Task::delay(5);
     }
+    pros::lcd::set_text(7, "exit stop wait");
+
 }
