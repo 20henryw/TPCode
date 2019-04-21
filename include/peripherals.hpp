@@ -31,6 +31,7 @@ class Peripherals
     double getTopVel();
     double getScrPos();
     void scrBase();
+    void tareScr();
 };
 
 #endif

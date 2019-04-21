@@ -344,10 +344,8 @@ void Drive::waitForRightCompletion()
 
 void Drive::pidMoveLeft(double position, std::int32_t velocity)
 {
-    lFDrive.tare_position();
-    lBDrive.tare_position();
-    lFTarget = position;
-    lBTarget = position;
+    lFTarget += position;
+    lBTarget += position;
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     waitForLeftCompletion();
@@ -356,10 +354,8 @@ void Drive::pidMoveLeft(double position, std::int32_t velocity)
 
 void Drive::pidMoveRight(double position, std::int32_t velocity)
 {
-    rFDrive.tare_position();
-    rBDrive.tare_position();
-    rFTarget = position;
-    rBTarget = position;
+    rFTarget += position;
+    rBTarget += position;
     rFDrive.move_relative(position, velocity);
     rBDrive.move_relative(position, velocity);
     waitForRightCompletion();
@@ -368,14 +364,10 @@ void Drive::pidMoveRight(double position, std::int32_t velocity)
 
 void Drive::pidMoveAll(double position, std::int32_t velocity)
 {
-    lFDrive.tare_position();
-    lBDrive.tare_position();
-    rFDrive.tare_position();
-    rBDrive.tare_position();
-    lFTarget = position;
-    lBTarget = position;
-    rFTarget = position;
-    rBTarget = position;
+    lFTarget += position;
+    lBTarget += position;
+    rFTarget += position;
+    rBTarget += position;
     lFDrive.move_relative(position, velocity);
     lBDrive.move_relative(position, velocity);
     rFDrive.move_relative(position, velocity);
@@ -386,14 +378,10 @@ void Drive::pidMoveAll(double position, std::int32_t velocity)
 
 void Drive::pidTurn(double position, std::int32_t velocity)
 {
-    lFDrive.tare_position();
-    lBDrive.tare_position();
-    rFDrive.tare_position();
-    rBDrive.tare_position();
-    lFTarget = -position;
-    lBTarget = -position;
-    rFTarget = position;
-    rBTarget = position;
+    lFTarget += -position;
+    lBTarget += -position;
+    rFTarget += position;
+    rBTarget += position;
     lFDrive.move_relative(-position, velocity);
     lBDrive.move_relative(-position, velocity);
     rFDrive.move_relative(position, velocity);

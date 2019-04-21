@@ -136,3 +136,8 @@ void Peripherals::scrBase()
     pros::Task::delay(400);
     scraper.tare_position();
 }
+
+void Peripherals::tareScr()
+{
+    scraper.tare_position();
+}
