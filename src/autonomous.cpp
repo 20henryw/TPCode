@@ -73,10 +73,12 @@ void shootMid()
       Task::delay(5);
     }
 
+  peA->moveInd(100);
+  peA->moveInt(100);
   peA->moveFly(125);
   Task::delay(200);
   peA->moveInd(0);
-  peA->moveInt(0);
+  peA->moveInt(127);
 }
 
 void shootFar()
@@ -230,11 +232,10 @@ void redBack2()
   peA->moveInt(0);
   peA->tareScr();
   peA->pidAbsScr(0, 127);
-  drA->pidMoveAll(2.5 , 127);
-  Task::delay(700);
+  drA->pidMoveAll(1.75, 120);
+  Task::delay(750);
 
   //Turn, scrape ball
-  // drA->waitForStop();
   drA->pidTurn(.76, 80);
   drA->pidMoveAll(.18, 60);
   peA->moveInt(127);
@@ -248,27 +249,26 @@ void redBack2()
   //aim, shoot
   drA->pidMoveAll(-.34, 50);
   drA->waitForStop();
-  drA->pidTurn(-.081, 50);
+  drA->pidTurn(-.062, 50);
   drA->waitForStop();
   shootMid();
-  peA->moveFly(99);
+  peA->moveFly(98);
+  peA->moveInt(110);
   peA->pidAbsScr(0,70);
 
   //turn right, intake ball
-  drA->pidTurn(-.674, 50);
-  peA->moveInt(110);
   drA->pidMoveAll(.85,100);
   Task::delay(500);
 
   //back up, turn right, scrape ball
   drA->pidMoveAll(-.35, 60);
   Task::delay(300);
-  drA->pidTurn(-.64, 50);
+  drA->pidTurn(-.61, 50);
   Task::delay(300);
-  drA->pidMoveAll(.73, 60);
+  drA->pidMoveAll(.72, 60);
   peA->pidMoveScr(-.19, 127);
   peA->moveInt(110);
-  drA->pidMoveAll(-.33, 50);
+  drA->pidMoveAll(-.32, 50);
   Task::delay(300);
   peA->moveInt(-5);
   Task::delay(100);
@@ -276,17 +276,82 @@ void redBack2()
   peA->pidAbsScr(0, 127);
 
   //turn left at far flag, shoot
-  drA->pidTurn(1.12, 80);
+  drA->pidTurn(1, 80);
   Task::delay(300);
   shootFar();
   drA->pidTurn(.255, 80);
-  drA->moveLeft(127);
-  drA->moveRight(100);
-  Task::delay(1400);
-  drA->moveAll(-10);
+  // drA->moveLeft(127);
+  // drA->moveRight(100);
+  // Task::delay(1400);
+  // drA->moveAll(-10);
 
 }
 
+void redBack3()
+{
+
+  //drive forward, pickup ball
+  peA->moveFly(102);
+  peA->moveInt(0);
+  peA->moveScr(15);
+  drA->pidMoveAll(1.75, 80);
+  Task::delay(700);
+  peA->tareScr();
+  peA->pidAbsScr(0, 127);
+
+  //Turn, scrape ball
+  drA->pidTurn(.7, 80);
+  drA->pidMoveAll(.15, 60);
+  peA->moveInt(127);
+  peA->pidMoveScr(-.235, 100);
+  Task::delay(200);
+  drA->pidMoveAll(-.02,50);
+  peA->moveInt(127);
+  
+  //aim, shoot
+  drA->pidMoveAll(-.34, 50);
+  drA->waitForStop();
+  drA->pidTurn(-.027, 50);
+  drA->waitForStop();
+  shootMid();
+  peA->moveInt(110);
+  peA->moveFly(97);
+  peA->pidAbsScr(0,70);
+
+  //turn right, intake ball
+  drA->pidTurn(-.692, 50);
+  drA->pidMoveAll(.85,100);
+  Task::delay(500);
+
+  //back up, turn right, scrape ball
+  drA->pidMoveAll(-.35, 60);
+  Task::delay(300);
+  drA->pidTurn(-.5, 50);
+  Task::delay(300);
+  drA->pidMoveAll(.65, 60);
+  peA->pidMoveScr(-.26, 127);
+  Task::delay(300);
+  peA->moveInt(110);
+  drA->pidMoveAll(-.4, 50);
+  Task::delay(800);
+  
+  //flip cap
+  peA->moveInt(0);
+  peA->pidAbsScr(-.5, 127);
+  drA->pidMoveAll(.35, 60);
+  Task::delay(500);
+  peA->pidAbsScr(0, 110);
+  Task::delay(500);
+  peA->moveInt(100);
+  drA->pidMoveAll(-.73, 60);
+  Task::delay(300);
+
+  //turn left at far flag, shoot
+  drA->pidTurn(.987, 80);
+  Task::delay(500);
+  shootFar();
+
+}
 
 /**
  * 
@@ -298,7 +363,7 @@ void autonomous()
   drA->reset(); 
   //pros::Task startDriveAuton(PIDDrive);
   //pros::Task startTurnAuton(turnTask);
-  switch (4)
+  switch (5)
   {
   case 0:
     redFrontSideMid();
@@ -315,7 +380,9 @@ void autonomous()
   case 4:
     redBack2();
     break;
-
+  case 5:
+    redBack3();
+    break;
   }
   //startDriveAuton.stop(); 
   //startTurnAuton.stop(); 
