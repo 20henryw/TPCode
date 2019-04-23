@@ -6,7 +6,7 @@ using namespace pros;
 bool intMoving = false;
 bool indMoving = false;
 bool isShooting = false;
-bool isFlying = false;
+bool isFlying = true;
 
 int normPow = 110;
 int backPow = 99;
@@ -80,7 +80,7 @@ void flywheel(void *param)
       isFlying = !isFlying;
       pros::Task::delay(200);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1)
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == 1)
     {
       flyPow = backPow;
       isFlying = !isFlying;
@@ -104,7 +104,7 @@ void flywheel(void *param)
         peOp->moveFly(0);
         pros::Task::delay(200);
       }
-      if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1)
+      if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y) == 1)
       {
         if (flyPow == normPow)
         {
@@ -193,7 +193,7 @@ void indexer(void *param)
       Task::delay(5);
 
     }
-    while(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y) == 1)
+    while(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A) == 1)
     {
       indMoving = true; 
       peOp->moveInd(-127); 

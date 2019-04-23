@@ -287,13 +287,14 @@ void redBack2()
 
 }
 
+//shoot mid, flip cap, shoot far
 void redBack3()
 {
 
   //drive forward, pickup ball
   peA->moveFly(102);
   peA->moveInt(0);
-  peA->moveScr(15);
+  peA->moveScr(10);
   drA->pidMoveAll(1.75, 80);
   Task::delay(700);
   peA->tareScr();
@@ -353,6 +354,75 @@ void redBack3()
 
 }
 
+//shoot mid, flip cap, shoot far
+void blueBack3()
+{
+
+  //drive forward, pickup ball
+  peA->moveFly(100);
+  peA->moveInt(0);
+  peA->moveScr(10);
+  drA->pidMoveAll(1.75, 80);
+  Task::delay(700);
+  peA->tareScr();
+  peA->pidAbsScr(0, 127);
+
+  //Turn right, scrape ball
+  drA->pidTurn(-.725, 80);
+  drA->pidMoveAll(.15, 60);
+  Task::delay(200);
+  peA->moveInt(127);
+  peA->pidMoveScr(-.238, 100);
+  Task::delay(200);
+  drA->pidMoveAll(-.02,50);
+  peA->moveInt(127);
+  
+  //aim, shoot
+  drA->pidMoveAll(-.34, 50);
+  drA->waitForStop();
+  drA->pidTurn(.055, 50);
+  drA->waitForStop();
+  shootMid();
+  peA->moveInt(110);
+  peA->moveFly(97);
+  peA->pidAbsScr(0,70);
+
+  //turn left, intake ball
+  drA->pidTurn(.692, 50);
+  drA->pidMoveAll(.85,100);
+  Task::delay(500);
+
+  //back up, turn left, scrape ball
+  drA->pidMoveAll(-.35, 60);
+  Task::delay(300);
+  drA->pidTurn(.5, 50);
+  Task::delay(300);
+  drA->pidMoveAll(.65, 60);
+  peA->pidMoveScr(-.26, 127);
+  Task::delay(300);
+  peA->moveInt(110);
+  drA->pidMoveAll(-.4, 50);
+  Task::delay(800);
+  
+  //flip cap
+  peA->moveInt(0);
+  peA->pidAbsScr(-.5, 127);
+  drA->pidMoveAll(.35, 60);
+  Task::delay(500);
+  peA->pidAbsScr(0, 110);
+  Task::delay(500);
+  peA->moveInt(100);
+  drA->pidMoveAll(-.73, 60);
+  Task::delay(300);
+
+  //turn right at far flag, shoot
+  drA->pidTurn(-.941, 80);
+  //Task::delay(500);
+  Task::delay(2500);
+  shootFar();
+
+}
+
 /**
  * 
  * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
@@ -363,7 +433,7 @@ void autonomous()
   drA->reset(); 
   //pros::Task startDriveAuton(PIDDrive);
   //pros::Task startTurnAuton(turnTask);
-  switch (5)
+  switch (6)
   {
   case 0:
     redFrontSideMid();
@@ -382,6 +452,9 @@ void autonomous()
     break;
   case 5:
     redBack3();
+    break;
+  case 6:
+    blueBack3();
     break;
   }
   //startDriveAuton.stop(); 
