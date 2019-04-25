@@ -292,7 +292,7 @@ void redBack3()
 {
 
   //drive forward, pickup ball
-  peA->moveFly(102);
+  peA->moveFly(101);
   peA->moveInt(0);
   peA->moveScr(7);
   drA->pidMoveAll(1.75, 80);
@@ -312,16 +312,16 @@ void redBack3()
   //aim right, shoot
   drA->pidMoveAll(-.34, 50);
   drA->waitForStop();
-  drA->pidTurn(-.026, 50);
+  drA->pidTurn(-.0255, 50);
   //drA->waitForStop();
-  Task::delay(300);
+  Task::delay(350);
   shootMid();
   peA->moveInt(100);
-  peA->moveFly(99);
+  peA->moveFly(98);
   peA->pidAbsScr(0,70);
 
   //turn right, intake ball
-  drA->pidTurn(-.693, 50);
+  drA->pidTurn(-.6935, 50);
   drA->pidMoveAll(.85,100);
   Task::delay(500);
 
@@ -349,7 +349,7 @@ void redBack3()
   Task::delay(300);
 
   //turn left at far flag, shoot
-  drA->pidTurn(.987, 80);
+  drA->pidTurn(.982, 80);
   Task::delay(600);
   shootFar();
 
@@ -380,7 +380,7 @@ void blueBack3()
   //aim left, shoot
   drA->pidMoveAll(-.34, 50);
   drA->waitForStop();
-  drA->pidTurn(.022, 50);
+  drA->pidTurn(.020, 50);
   //drA->waitForStop();
   Task::delay(300);
   shootMid();
@@ -389,7 +389,7 @@ void blueBack3()
   peA->pidAbsScr(0,70);
 
   //turn left, intake ball
-  drA->pidTurn(.696, 50);
+  drA->pidTurn(.698, 50);
   drA->pidMoveAll(.85,100);
   Task::delay(500);
 
