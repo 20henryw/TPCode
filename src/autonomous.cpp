@@ -427,12 +427,11 @@ void blueBack3()
  * 
  * to use functions from the Drive dr, use the following notation. ask rithvik if it doens't work
  * drA->functionName();
+ * redBack3 and blueBack3 are the good back autons
  **/
 void autonomous()
 {
   drA->reset(); 
-  //pros::Task startDriveAuton(PIDDrive);
-  //pros::Task startTurnAuton(turnTask);
   switch (6)
   {
   case 0:
