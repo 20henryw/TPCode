@@ -212,6 +212,7 @@ void indexer(void *param)
 
 void scraper(void *param)
 {
+  peOp->scrBase();
   while (true)
   {
     pros::Controller master(pros::E_CONTROLLER_MASTER);
