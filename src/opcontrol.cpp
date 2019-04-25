@@ -160,7 +160,7 @@ void indexer(void *param)
     {
       indMoving = true;
       dShot2 = false;
-      peOp->moveInd(127);
+      peOp->moveInd(80);
       peOp->moveInt(80);
       
       pros::lcd::set_text(5, "L1");
@@ -185,7 +185,7 @@ void indexer(void *param)
       dShot2 = true;
 
       peOp->moveScr(127);
-      Task::delay(200);
+      Task::delay(400);
 
       peOp->resetScr();
       pros::lcd::set_text(5, "L2");
@@ -233,7 +233,7 @@ void scraper(void *param)
 
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X))
     {
-      peOp->pidAbsScr(0, 100);
+      peOp->pidAbsScr(0, 127);
       Task::delay(400);
     }    
 
@@ -248,7 +248,7 @@ void scraper(void *param)
     
     if(!dShot2)
     {
-      peOp->moveScr(10);
+      //peOp->moveScr(7);
     }
     pros::Task::delay(10);
   }

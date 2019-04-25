@@ -66,7 +66,7 @@ void Peripherals::scrBrake(pros::motor_brake_mode_e_t mode)
 
 void Peripherals::resetScr()
 {
-      pidAbsScr(0, 100);
+      pidAbsScr(0, 127);
       pros::Task::delay(400);
 }
 
@@ -132,7 +132,7 @@ void Peripherals::scrBase()
 {
     moveScr(127);
     pros::Task::delay(300);
-    pidMoveScr(-.05, 150);
+    pidMoveScr(-.033, 127);
     pros::Task::delay(400);
     scraper.tare_position();
 }
