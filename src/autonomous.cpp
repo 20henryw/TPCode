@@ -295,7 +295,7 @@ void redBack2()
 void redBack3()
 {
 
-  pros::lcd::set_text(1, "redBack3");
+  pros::lcd::set_text(0, "redBack3");
   //drive forward, pickup ball
   peA->moveFly(101);
   peA->moveInt(0);
@@ -364,7 +364,7 @@ void redBack3()
 void blueBack3()
 {
 
-  pros::lcd::set_text(1, "blueBack3");
+  pros::lcd::set_text(0, "blueBack3");
 
  //drive forward, pickup ball
   peA->moveFly(102);
